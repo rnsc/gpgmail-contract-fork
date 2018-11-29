@@ -809,93 +809,20 @@ static BOOL gpgMailWorks = NO;
              
 #pragma mark Active Contract Helpers
 
-- (NSDictionary *)contractInformation {
-    if(!_activationInfo) {
-        NSDictionary *activationInfo = [self fetchContractInformation];
-        _activationInfo = activationInfo;
-    }
-    
-    return _activationInfo;
-}
-
-- (NSDictionary *)fetchContractInformation {
-    GPGTaskHelperXPC *xpc = [[GPGTaskHelperXPC alloc] init];
-    NSDictionary __autoreleasing *activationInfo = nil;
-    BOOL hasSupportContract = [xpc validSupportContractAvailableForProduct:@"GPGMail" activationInfo:&activationInfo];
-//    NSLog(@"[GPGMail %@]: Support contract is valid? %@", [(GPGMailBundle *)[GPGMailBundle sharedInstance] version], hasSupportContract ? @"YES" : @"NO");
-//    NSLog(@"[GPGMail %@]: Activation info: %@", [(GPGMailBundle *)[GPGMailBundle sharedInstance] version], activationInfo);
-    return activationInfo;
-}
-
 - (BOOL)hasActiveContract {
-    NSDictionary *contractInformation = [self contractInformation];
-    return [contractInformation[@"Active"] boolValue];
+    return YES;
 }
 
 - (BOOL)hasActiveContractOrActiveTrial {
-    return [self hasActiveContract] || [[self remainingTrialDays] integerValue] > 0;
+    return YES;
 }
 
 - (NSNumber *)remainingTrialDays {
-    NSDictionary *contractInformation = [self contractInformation];
-    if(!contractInformation[@"ActivationRemainingTrialDays"]) {
-        return @(30);
-    }
-    return contractInformation[@"ActivationRemainingTrialDays"];
-}
-
-- (void)startSupportContractWizard {
-    GMSupportPlanAssistantViewController *supportPlanAssistantViewController = [[GMSupportPlanAssistantViewController alloc] initWithNibName:@"GMSupportPlanAssistantView" bundle:[GPGMailBundle bundle]];
-    supportPlanAssistantViewController.delegate = self;
-    
-    GMSupportPlanAssistantWindowController *supportPlanAssistantWindowController = [[GMSupportPlanAssistantWindowController alloc] initWithSupportPlanActivationInformation:[self contractInformation]];
-    supportPlanAssistantWindowController.delegate = self;
-    supportPlanAssistantWindowController.contentViewController = supportPlanAssistantViewController;
-    [[supportPlanAssistantWindowController window] setTitle:@"GPG Mail Support Plan"];
-    [supportPlanAssistantWindowController showWindow:nil];
-
-    [self setIvar:@"Window" value:supportPlanAssistantWindowController];
-    [self setIvar:@"View" value:supportPlanAssistantViewController];
+    return @(30);
 }
 
 - (BOOL)shouldShowSupportPlanActivationDialog {
-    if(![self hasActiveContractOrActiveTrial]) {
-        [self saveDateActivationDialogWasLastShown];
-        return YES;
-    }
-    NSDictionary *contractInfo = [self contractInformation];
-    // Trial has never been started?
-    if(![contractInfo valueForKey:@"ActivationRemainingTrialDays"]) {
-        [self saveDateActivationDialogWasLastShown];
-        return YES;
-    }
-    NSDate *date = [[NSUserDefaults standardUserDefaults] objectForKey:@"__gme3_spd_last_shown_date"];
-    if(!date) {
-        [self saveDateActivationDialogWasLastShown];
-        return YES;
-    }
-    // Check if between date now and date last are 3 days.
-
-    NSDate *fromDateTime = date;
-    NSDate *toDateTime = [NSDate date];
-
-    NSDate *fromDate;
-    NSDate *toDate;
-
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-
-    [calendar rangeOfUnit:NSCalendarUnitDay startDate:&fromDate
-                 interval:NULL forDate:fromDateTime];
-    [calendar rangeOfUnit:NSCalendarUnitDay startDate:&toDate
-                 interval:NULL forDate:toDateTime];
-    
-    NSDateComponents *difference = [calendar components:NSCalendarUnitDay
-                                               fromDate:fromDate toDate:toDate options:0];
-    if([difference day] >= 3) {
-        [self saveDateActivationDialogWasLastShown];
-        return YES;
-    }
-    return NO;
+	return NO;
 }
 
 - (void)saveDateActivationDialogWasLastShown {
@@ -903,9 +830,6 @@ static BOOL gpgMailWorks = NO;
 }
 
 - (void)checkSupportContractAndStartWizardIfNecessary {
-    if(![self hasActiveContract] && [self shouldShowSupportPlanActivationDialog]) {
-        [self startSupportContractWizard];
-    }
 }
              
 #pragma mark -
