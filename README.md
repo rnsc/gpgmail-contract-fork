@@ -1,4 +1,4 @@
-# kivikakk/GPGMail: GPGMail, minus annoying dialog, plus working build instructions
+# gpg-contract-fork: GPGMail fork, minus contract dialog, plus working build instructions
 
 I love open source. Let's go.
 
