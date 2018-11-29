@@ -7,6 +7,7 @@ For general information, see the [upstream README](https://github.com/GPGTools/G
 ## Build
 
 * Install GPG. [Homebrew](https://brew.sh) makes this easy: `brew install gnupg`
+* Clone this repo. `git clone https://github.com/kivikakk/GPGMail && cd GPGMail`
 * Make sure you have submodules cloned. `git submodule update --init --recursive`
 * Build and install Libmacgpg. `(cd Dependencies/Libmacgpg && make && mkdir -p ~/Library/Frameworks && cp -r build/Release/Libmacgpg.framework ~/Library/Frameworks/)`
 * Build, sign and install GPGTools. `make && codesign -s - --deep --force build/Release/GPGMail.mailbundle && mkdir -p ~/Library/Mail/Bundles && cp -r build/Release/GPGMail.mailbundle ~/Library/Mail/Bundles`
