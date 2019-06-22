@@ -11,7 +11,7 @@ For general information, see the [upstream README](https://github.com/GPGTools/G
 * Clone this repo. `git clone https://github.com/kivikakk/GPGMail && cd GPGMail`
 * Make sure you have submodules cloned. `git submodule update --init --recursive`
 * Build and install Libmacgpg. `(cd Dependencies/Libmacgpg && make && mkdir -p ~/Library/Frameworks && cp -r build/Release/Libmacgpg.framework ~/Library/Frameworks/)`
-* If you receive an Xcode error about Command line tools, this can help `sudo xcode-select --switch /Library/Developer/CommandLineTools`. [ref](https://github.com/nodejs/node-gyp/issues/569#issuecomment-94917337)
+* If you receive an Xcode error about Command line tools, this can help `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`. [ref](https://github.com/nodejs/node-gyp/issues/569#issuecomment-94917337)
 * Build, sign and install GPGTools. `make && codesign -s - --deep --force build/Release/GPGMail.mailbundle && mkdir -p ~/Library/Mail/Bundles && cp -r build/Release/GPGMail.mailbundle ~/Library/Mail/Bundles/`
 * Enable Mail Plug-ins: `sudo defaults write "/Library/Preferences/com.apple.mail" EnableBundles 1`
 * Open Mail.app, open its Preferences, click "Manage Plugins..." at the bottom of the General pane, check the box next to "GPGMail.mailbundle", click "Apply and Restart Mail".
